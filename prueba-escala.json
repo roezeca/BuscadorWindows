@@ -1,0 +1,14 @@
+{
+  "first_scan_seconds": 9.41,
+  "first_report": "Índice actualizado · 5,001 revisadas · 5,001 actualizadas · 0 sin cambios · 0 retiradas\n0 errores · 0 lecturas parciales · 1 carpetas técnicas omitidas · Registro disponible",
+  "second_scan_seconds": 0.25,
+  "second_report": "Índice actualizado · 5,001 revisadas · 0 actualizadas · 5,001 sin cambios · 0 retiradas\n0 errores · 0 lecturas parciales · 1 carpetas técnicas omitidas · Registro disponible",
+  "search_results": 300,
+  "max_gui_tick_gap_seconds": 0.082,
+  "gui_peak_rss_mib": 77.7,
+  "seed_650000_seconds": 8.38,
+  "large_index_count": 650000,
+  "large_index_search_results": 300,
+  "large_index_count_and_search_seconds": 1.39,
+  "environment": "Linux; datos sintéticos, no archivos del usuario"
+}

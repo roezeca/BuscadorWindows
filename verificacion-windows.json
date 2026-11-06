@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "platform": "win32",
+  "python": "3.12.10",
+  "frozen": true,
+  "checks": [
+    "PDFium: biblioteca nativa y renderizado PDF",
+    "Indexación desde la interfaz: 4 archivos",
+    "Búsqueda aproximada, acentos y vista previa de texto",
+    "Búsqueda dentro de Word y PDF",
+    "Filtro de imágenes y miniatura",
+    "Detención del proceso de indexación conservando el índice",
+    "Cierre sin trabajadores pendientes"
+  ]
+}
