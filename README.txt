@@ -2,7 +2,13 @@
 
 Corrige la ventana que quedaba en «No responde» al buscar: la vista previa ya no abre otro proceso ni espera a enumerar procesos hijos antes de mostrar el texto. Si la lectura falla, se muestra el error en lugar de quedarse en «Cargando vista previa…».
 
-El ejecutable de esta carpeta sigue siendo el 0.2.1 hasta que se vuelva a compilar. El código corregido está en codigo-fuente-0.2.2.zip. Tras compilarlo, el título debe decir Buscador 0.2.2. No hace falta borrar el índice.
+ACTUALIZAR
+1. Cierra la versión anterior. Si no responde, finalízala desde el Administrador de tareas.
+2. Abre BuscadorWindows.exe. El título debe decir Buscador 0.2.2.
+3. Busca de nuevo sobre el mismo índice. No hace falta borrarlo.
+
+Windows 10/11 de 64 bits. No necesita instalar Python. El ejecutable no está firmado digitalmente.
+Verificado bajo Wine: índice, Unicode defectuoso, búsqueda, vista previa, Word/PDF, miniatura y cierre.
 
 BUSCADOR WINDOWS 0.2.1
 
