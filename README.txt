@@ -1,4 +1,10 @@
-﻿BUSCADOR WINDOWS 0.2.1
+﻿BUSCADOR WINDOWS 0.2.2
+
+Corrige la ventana que quedaba en «No responde» al buscar: la vista previa ya no abre otro proceso ni espera a enumerar procesos hijos antes de mostrar el texto. Si la lectura falla, se muestra el error en lugar de quedarse en «Cargando vista previa…».
+
+El ejecutable de esta carpeta sigue siendo el 0.2.1 hasta que se vuelva a compilar. El código corregido está en codigo-fuente-0.2.2.zip. Tras compilarlo, el título debe decir Buscador 0.2.2. No hace falta borrar el índice.
+
+BUSCADOR WINDOWS 0.2.1
 
 Corrige UnicodeEncodeError: surrogates not allowed al guardar texto de documentos con codificación defectuosa. Conserva el texto legible y los emojis válidos; reemplaza únicamente las unidades Unicode inválidas por �. Los nombres de archivo ilegibles se omiten con un aviso, sin renombrarlos ni modificar los archivos.
 
