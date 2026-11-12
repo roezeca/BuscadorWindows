@@ -4,7 +4,7 @@ import threading
 from PySide6.QtCore import QSettings, QTimer
 
 from buscador.app import MainWindow, STYLE
-from buscador.engine import Index
+from buscador.engine import Index, SearchResponse, SearchResult
 
 
 def wait_until(app, predicate, timeout=30):
@@ -47,6 +47,40 @@ def test_desktop_indexes_searches_and_previews(tmp_path, qt_app):
         window.close()
         wait_until(app, lambda: not window.jobs)
         app.processEvents()
+
+
+def _result(name, kind, size, match="Nombre"):
+    return SearchResult(f"/tmp/{name}", name, kind, size, 0, "", "", "", 0, match)
+
+
+def test_results_sort_by_name_kind_and_size(tmp_path, qt_app):
+    settings = QSettings(str(tmp_path / "ajustes.ini"), QSettings.Format.IniFormat)
+    window = MainWindow(Index(tmp_path / "indice.db"), settings)
+    window.show()
+    try:
+        window.display_results(SearchResponse([
+            _result("zeta.txt", "Documento", 2_000_000),
+            _result("alfa.pdf", "Documento", 500),
+            _result("beta", "Carpeta", 0),
+            _result("medio.png", "Imagen", 20_000, "Contenido"),
+        ], {}))
+        names = lambda: [window.table.item(row, 0).text() for row in range(window.table.rowCount())]
+        window.sort_by_column(0)
+        assert names() == ["alfa.pdf", "beta", "medio.png", "zeta.txt"]
+        window.table.selectRow(2)
+        assert window.selected().name == "medio.png"
+        window.sort_by_column(0)
+        assert names() == ["zeta.txt", "medio.png", "beta", "alfa.pdf"]
+        assert window.selected().name == "medio.png"
+        window.sort_by_column(1)
+        assert names() == ["beta", "alfa.pdf", "zeta.txt", "medio.png"]
+        window.sort_by_column(2)
+        assert names() == ["beta", "alfa.pdf", "medio.png", "zeta.txt"]
+        window.sort_by_column(3)
+        assert names() == ["medio.png", "alfa.pdf", "beta", "zeta.txt"]
+    finally:
+        window.close()
+        wait_until(qt_app, lambda: not window.jobs)
 
 
 def test_search_progress_shows_while_searching_and_hides_after(tmp_path, qt_app, monkeypatch):

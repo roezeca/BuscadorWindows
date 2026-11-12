@@ -1,4 +1,15 @@
-﻿BUSCADOR WINDOWS 0.2.3
+﻿BUSCADOR WINDOWS 0.2.4
+
+Se puede ordenar la lista de resultados con un clic en Nombre, Tipo, Tamaño o Coincidencia. Otro clic invierte el orden.
+
+ACTUALIZAR
+1. Cierra la versión anterior.
+2. Abre BuscadorWindows.exe. El título debe decir Buscador 0.2.4.
+3. El índice anterior se sigue usando.
+
+Windows 10/11 de 64 bits. No necesita instalar Python. El ejecutable no está firmado digitalmente.
+
+BUSCADOR WINDOWS 0.2.3
 
 Al buscar aparece una barra de progreso debajo del cuadro de texto. Desaparece cuando llegan los resultados.
 

@@ -2,6 +2,10 @@
 
 Aplicación de escritorio en español para encontrar archivos, imágenes, documentos y carpetas por su nombre o por el texto que contienen. Elige una carpeta, una unidad o una ubicación de red accesible desde Windows. Todo el procesamiento se hace en tu equipo.
 
+## Actualización 0.2.4: ordenar los resultados
+
+Un clic en **Nombre**, **Tipo**, **Tamaño** o **Coincidencia** ordena la lista. Otro clic en la misma columna invierte el orden. El tamaño se ordena por el valor real, no por el texto (2 KB queda antes que 1 MB). La fila elegida sigue siendo el mismo archivo después de ordenar.
+
 ## Actualización 0.2.3: barra de progreso al buscar
 
 Mientras la búsqueda corre, debajo del cuadro de texto aparece una barra animada y el estado dice «Buscando…». Al llegar los resultados, o si la búsqueda falla, la barra se oculta. Sigue siendo posible buscar mientras se actualiza el índice: cada tarea tiene su propia barra.

@@ -50,6 +50,20 @@ QSplitter::handle { background: #e2e8f0; }
 """
 
 
+class ResultItem(QTableWidgetItem):
+    """Celda que ordena por el dato real, no por el texto visible."""
+
+    def __init__(self, text: str, result: SearchResult, sort_key):
+        super().__init__(text)
+        self.result = result
+        self.sort_key = sort_key
+
+    def __lt__(self, other) -> bool:
+        if isinstance(other, ResultItem):
+            return self.sort_key < other.sort_key
+        return super().__lt__(other)
+
+
 def size_label(size: int) -> str:
     value = float(size)
     for unit in ("B", "KB", "MB", "GB", "TB"):
@@ -238,6 +252,13 @@ class MainWindow(QMainWindow):
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         for column in (1, 2, 3):
             self.table.horizontalHeader().setSectionResizeMode(column, QHeaderView.ResizeMode.ResizeToContents)
+        self.sort_column: int | None = None
+        self.sort_order = Qt.SortOrder.AscendingOrder
+        header = self.table.horizontalHeader()
+        header.setSectionsClickable(True)
+        header.setSortIndicatorShown(False)
+        header.setToolTip("Clic en una columna para ordenar. Otro clic invierte el orden.")
+        header.sectionClicked.connect(self.sort_by_column)
         results_layout.addWidget(self.table)
         self.expanded = QLabel("", objectName="hint")
         self.expanded.setWordWrap(True)
@@ -514,10 +535,20 @@ class MainWindow(QMainWindow):
             self.results = response.results
             self.table.setRowCount(len(self.results))
             for row, result in enumerate(self.results):
-                for column, value in enumerate((result.name, result.kind, "—" if result.kind == "Carpeta" else size_label(result.size), result.match)):
-                    item = QTableWidgetItem(value)
+                name_key = (result.name.casefold(), result.path.casefold())
+                keys = (
+                    name_key,
+                    (result.kind.casefold(), name_key),
+                    (result.size, name_key),
+                    (result.match.casefold(), name_key),
+                )
+                labels = (result.name, result.kind, "—" if result.kind == "Carpeta" else size_label(result.size), result.match)
+                for column, (value, key) in enumerate(zip(labels, keys)):
+                    item = ResultItem(value, result, key)
                     item.setToolTip(result.path)
                     self.table.setItem(row, column, item)
+            if self.sort_column is not None and self.results:
+                self.table.sortItems(self.sort_column, self.sort_order)
         finally:
             self.table.blockSignals(False)
         count = len(self.results)
@@ -530,9 +561,20 @@ class MainWindow(QMainWindow):
         else:
             self.show_preview()
 
+    def sort_by_column(self, column: int) -> None:
+        if self.sort_column == column and self.sort_order == Qt.SortOrder.AscendingOrder:
+            self.sort_order = Qt.SortOrder.DescendingOrder
+        else:
+            self.sort_column = column
+            self.sort_order = Qt.SortOrder.AscendingOrder
+        header = self.table.horizontalHeader()
+        header.setSortIndicatorShown(True)
+        header.setSortIndicator(column, self.sort_order)
+        self.table.sortItems(column, self.sort_order)
+
     def selected(self) -> SearchResult | None:
-        row = self.table.currentRow()
-        return self.results[row] if 0 <= row < len(self.results) else None
+        item = self.table.item(self.table.currentRow(), 0)
+        return item.result if isinstance(item, ResultItem) else None
 
     def show_preview(self) -> None:
         self.preview_generation += 1
