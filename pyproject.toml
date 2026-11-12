@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buscador-windows"
-version = "0.2.2"
+version = "0.2.3"
 description = "Buscador de archivos y contenido con coincidencias aproximadas y un índice local."
 requires-python = ">=3.12"
 dependencies = [

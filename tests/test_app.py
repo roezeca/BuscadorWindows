@@ -49,6 +49,47 @@ def test_desktop_indexes_searches_and_previews(tmp_path, qt_app):
         app.processEvents()
 
 
+def test_search_progress_shows_while_searching_and_hides_after(tmp_path, qt_app, monkeypatch):
+    root = tmp_path / "archivos"
+    root.mkdir()
+    (root / "nota.txt").write_text("casa con jardín", encoding="utf-8")
+    index = Index(tmp_path / "index.db")
+    index.scan(root)
+    settings = QSettings(str(tmp_path / "settings.ini"), QSettings.Format.IniFormat)
+    settings.setValue("location", str(root))
+    window = MainWindow(index, settings)
+    window.show()
+    started = threading.Event()
+    release = threading.Event()
+    original = __import__("buscador.app", fromlist=["run_task"]).run_task
+
+    def slow_search(*args, **kwargs):
+        if len(args) > 1 and args[1] == "search":
+            started.set()
+            assert release.wait(5)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr("buscador.app.run_task", slow_search)
+    try:
+        assert not window.search_progress.isVisible()
+        window.query.setText("casa")
+        window.request_search()
+        wait_until(qt_app, lambda: started.is_set() and window.search_progress.isVisible())
+        assert window.result_status.text() == "Buscando…"
+        assert window.search_progress.maximum() == 0
+        release.set()
+        wait_until(qt_app, lambda: "search" not in window.jobs and not window.search_progress.isVisible())
+        assert window.table.rowCount() == 1
+        window.query.clear()
+        window.request_search()
+        assert not window.search_progress.isVisible()
+        assert window.table.rowCount() == 0
+    finally:
+        release.set()
+        window.close()
+        wait_until(qt_app, lambda: not window.jobs)
+
+
 def test_preview_stays_responsive_and_wraps_long_lines(tmp_path, qt_app):
     root = tmp_path / "archivos"
     root.mkdir()

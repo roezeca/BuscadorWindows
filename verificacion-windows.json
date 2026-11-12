@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "platform": "win32",
   "python": "3.12.10",
   "frozen": true,

@@ -151,6 +151,11 @@ class MainWindow(QMainWindow):
         search_row.addWidget(self.query, 1)
         search_row.addWidget(self.search_button)
         layout.addLayout(search_row)
+        self.search_progress = QProgressBar()
+        self.search_progress.setTextVisible(False)
+        self.search_progress.setAccessibleName("Progreso de la búsqueda")
+        self.search_progress.hide()
+        layout.addWidget(self.search_progress)
 
         body = QHBoxLayout()
         filters_card = QFrame(objectName="card")
@@ -370,8 +375,14 @@ class MainWindow(QMainWindow):
         elif name == "search" and self.pending_search:
             self.pending_search = False
             self.request_search()
+        elif name == "search":
+            self.set_searching(False)
         elif name in self.pending_tasks and not self.closing:
             self.start_queued(name)
+
+    def set_searching(self, active: bool) -> None:
+        self.search_progress.setVisible(active)
+        self.search_progress.setRange(0, 0 if active else 100)
 
     def set_scanning(self, active: bool) -> None:
         for widget in (self.index_button, self.location, self.browse, self.ocr, self.force, self.skip_technical, self.clear_button):
@@ -417,9 +428,11 @@ class MainWindow(QMainWindow):
         if "search" in self.jobs:
             self.jobs["search"][2].set()
             self.pending_search = True
+            self.set_searching(True)
             return
         root, query = self.location.text().strip(), self.query.text().strip()
         if not root or not query:
+            self.set_searching(False)
             self.display_results(SearchResponse([], {}))
             self.result_status.setText("Escribe qué quieres encontrar")
             return
@@ -428,6 +441,7 @@ class MainWindow(QMainWindow):
                        extensions=self.extensions.text(), fuzzy=self.fuzzy.isChecked())
         cancelled = threading.Event()
         self.result_status.setText("Buscando…")
+        self.set_searching(True)
         self.start_job("search", lambda _worker: (generation, root, run_task(
             self.index.database, "search", dict(root=root, query=query, **options), cancelled, timeout=30)), cancelled)
 
@@ -450,8 +464,11 @@ class MainWindow(QMainWindow):
         elif name == "search":
             generation, root, response = value
             if generation == self.search_generation and response is not None:
+                self.set_searching(False)
                 self.results_root = root
                 self.display_results(response)
+            elif not self.pending_search:
+                self.set_searching(False)
         elif name == "count":
             token, count = value
             if count is not None and token == (self.location.text().strip(), self.scan_epoch) and "scan" not in self.jobs:
@@ -482,6 +499,7 @@ class MainWindow(QMainWindow):
             self.scan_status.setText("No se pudo completar la actualización.")
             QMessageBox.warning(self, "No se pudo actualizar el índice", message)
         elif name == "search":
+            self.set_searching(False)
             self.result_status.setText("No se pudo completar la búsqueda: " + message)
         elif name == "preview":
             self.preview_text.setPlainText("No se pudo cargar la vista previa.")

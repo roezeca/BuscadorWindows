@@ -2,6 +2,10 @@
 
 Aplicación de escritorio en español para encontrar archivos, imágenes, documentos y carpetas por su nombre o por el texto que contienen. Elige una carpeta, una unidad o una ubicación de red accesible desde Windows. Todo el procesamiento se hace en tu equipo.
 
+## Actualización 0.2.3: barra de progreso al buscar
+
+Mientras la búsqueda corre, debajo del cuadro de texto aparece una barra animada y el estado dice «Buscando…». Al llegar los resultados, o si la búsqueda falla, la barra se oculta. Sigue siendo posible buscar mientras se actualiza el índice: cada tarea tiene su propia barra.
+
 ## Actualización 0.2.2: la búsqueda ya no deja la ventana en «No responde»
 
 Al elegir un resultado, la vista previa leía el texto ya guardado en un proceso nuevo y, al terminar, enumeraba todos los procesos hijos antes de cerrarlo. En Windows esa enumeración puede no volver. La interfaz se quedaba en «Cargando vista previa…» y el sistema marcaba la ventana como no responde. La vista previa ahora se lee en el hilo de trabajo, sin arrancar otro proceso, y el cierre de un trabajador lo detiene aunque esa lista no responda. El texto que se muestra parte las líneas enormes y descarta caracteres de control para que Qt no se bloquee al dibujarlo. Si la lectura falla, el mensaje de carga se reemplaza por el error.
