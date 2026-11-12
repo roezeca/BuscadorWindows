@@ -1,0 +1,45 @@
+name: Probar y compilar Windows
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements-dev.lock
+      - name: Probar motor e interfaz
+        run: python -m pytest -q
+        env:
+          QT_QPA_PLATFORM: offscreen
+      - name: Empaquetar aplicación
+        run: python -m PyInstaller --noconfirm --clean --windowed --onefile --name BuscadorWindows --collect-all pypdfium2 --collect-all pypdfium2_raw launcher.py
+      - name: Probar el ejecutable empaquetado
+        shell: pwsh
+        run: |
+          $reportPath = Join-Path $PWD 'dist/verificacion-windows.json'
+          $process = Start-Process -FilePath './dist/BuscadorWindows.exe' -ArgumentList @('--self-test', ('"' + $reportPath + '"')) -Wait -PassThru
+          if ($process.ExitCode -ne 0 -or -not (Test-Path $reportPath)) { throw 'Falló el ejecutable' }
+          $report = Get-Content $reportPath -Raw | ConvertFrom-Json
+          if ($report.status -ne 'passed' -or -not $report.frozen) { throw 'Verificación incompleta' }
+        env:
+          QT_QPA_PLATFORM: offscreen
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BuscadorWindows-x64
+          path: |
+            dist/BuscadorWindows.exe
+            dist/verificacion-windows.json
+          if-no-files-found: error

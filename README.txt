@@ -1,4 +1,38 @@
-﻿BUSCADOR WINDOWS 0.2.1
+﻿BUSCADOR WINDOWS 0.2.4
+
+Se puede ordenar la lista de resultados con un clic en Nombre, Tipo, Tamaño o Coincidencia. Otro clic invierte el orden.
+
+ACTUALIZAR
+1. Cierra la versión anterior.
+2. Abre BuscadorWindows.exe. El título debe decir Buscador 0.2.4.
+3. El índice anterior se sigue usando.
+
+Windows 10/11 de 64 bits. No necesita instalar Python. El ejecutable no está firmado digitalmente.
+
+BUSCADOR WINDOWS 0.2.3
+
+Al buscar aparece una barra de progreso debajo del cuadro de texto. Desaparece cuando llegan los resultados.
+
+ACTUALIZAR
+1. Cierra la versión anterior. Si no responde, finalízala desde el Administrador de tareas.
+2. Abre BuscadorWindows.exe. El título debe decir Buscador 0.2.3.
+3. El índice anterior se sigue usando.
+
+Windows 10/11 de 64 bits. No necesita instalar Python. El ejecutable no está firmado digitalmente.
+
+BUSCADOR WINDOWS 0.2.2
+
+Corrige la ventana que quedaba en «No responde» al buscar: la vista previa ya no abre otro proceso ni espera a enumerar procesos hijos antes de mostrar el texto. Si la lectura falla, se muestra el error en lugar de quedarse en «Cargando vista previa…».
+
+ACTUALIZAR
+1. Cierra la versión anterior. Si no responde, finalízala desde el Administrador de tareas.
+2. Abre BuscadorWindows.exe. El título debe decir Buscador 0.2.2.
+3. Busca de nuevo sobre el mismo índice. No hace falta borrarlo.
+
+Windows 10/11 de 64 bits. No necesita instalar Python. El ejecutable no está firmado digitalmente.
+Verificado bajo Wine: índice, Unicode defectuoso, búsqueda, vista previa, Word/PDF, miniatura y cierre.
+
+BUSCADOR WINDOWS 0.2.1
 
 Corrige UnicodeEncodeError: surrogates not allowed al guardar texto de documentos con codificación defectuosa. Conserva el texto legible y los emojis válidos; reemplaza únicamente las unidades Unicode inválidas por �. Los nombres de archivo ilegibles se omiten con un aviso, sin renombrarlos ni modificar los archivos.
 
